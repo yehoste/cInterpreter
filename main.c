@@ -31,20 +31,6 @@ Type parseToken(char letter){
     return OPERATOR;
 }
 
-// char* removeBlank(char *line){
-    
-//     u32 blankCount=0;
-
-//     for(int i = 0; i < strlen(line); i++){
-//         if (line[i] == ' '){
-//             blankCount++;
-//         }
-//     }
-
-
-// }
-
-
 Token* interpret(char *line){
     u32 length = strlen(line);
     Token *tokens = malloc(sizeof(Token) * length);
