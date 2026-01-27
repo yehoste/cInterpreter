@@ -52,7 +52,7 @@ void operate(i32 *sum, char operator, u32 num){
     }
 }
 
-Token* removeBrackets(Token *tokens, u32 *length){
+int removeBrackets(Token *tokens, u32 *length){
 
     u32 startIndex;
     u32 endingIndex;
@@ -61,7 +61,7 @@ Token* removeBrackets(Token *tokens, u32 *length){
 
     for (int i=0; i < *length; i++){
         if (i == *length-1){
-            return tokens;
+            return 0;
         }
         if (tokens[i].value == '('){
             startIndex = i;
@@ -85,7 +85,7 @@ Token* removeBrackets(Token *tokens, u32 *length){
 
     free(tokens);
 
-    return removeBrackets(tokens, length);
+    return claculate(tokens, length);
 
 
 }
@@ -97,7 +97,11 @@ i32 claculate(Token tokens[], u32 length){
     u32 actualNumber = 0;
     char previous = '+';
 
-    tokens = removeBrackets(tokens, &length);
+    for (int i = 0; i < length; i++){
+        if (tokens[i].value == '('){
+            i32 value = removeBrackets(tokens, &length);
+        }
+    }
 
     for (int i=0; i< length; i++){
 
