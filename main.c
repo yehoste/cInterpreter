@@ -52,12 +52,52 @@ void operate(i32 *sum, char operator, u32 num){
     }
 }
 
+Token* removeBrackets(Token *tokens, u32 *length){
+
+    u32 startIndex;
+    u32 endingIndex;
+
+    bool noBrackets=false;
+
+    for (int i=0; i < *length; i++){
+        if (i == *length-1){
+            return tokens;
+        }
+        if (tokens[i].value == '('){
+            startIndex = i;
+            break;
+        }
+    }
+
+    for (int i = *length - 1; i >= 0; i--){
+        if (tokens[i].value == ')'){
+            endingIndex = i;
+        }
+    }
+
+    *length = endingIndex - startIndex - 1;
+
+    Token *newTokens = malloc(*length);
+
+    for (int i = startIndex + 1; i < endingIndex; i++){
+        newTokens[i] = tokens[i];
+    }
+
+    free(tokens);
+
+    return removeBrackets(tokens, length);
+
+
+}
+
 
 i32 claculate(Token tokens[], u32 length){
    
     i32 sum = 0;
     u32 actualNumber = 0;
     char previous = '+';
+
+    tokens = removeBrackets(tokens, &length);
 
     for (int i=0; i< length; i++){
 
