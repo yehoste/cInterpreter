@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-
+#include <math.h>
 
 typedef uint32_t u32;
 typedef int32_t i32;
@@ -22,6 +22,8 @@ typedef struct{
     Type type;
     char value;
 }Token;
+
+i32 calculate(Token tokens[], u32 length);
 
 
 Type parseToken(char letter){
@@ -52,46 +54,91 @@ void operate(i32 *sum, char operator, u32 num){
     }
 }
 
-int removeBrackets(Token *tokens, u32 *length){
+u32 getLengthOfInt(i32 number){
+    u32 length = 0;
 
-    u32 startIndex;
+    if (number < 0){
+        number *= -1;
+        length +=1;
+    }
+
+    while(number >= 10){
+        number /= 10;
+        length++;
+    }
+
+    return length+1;
+}
+
+void removeBrackets(Token **tokens, u32 *length){
+
+    i32 startIndex = -1;
     u32 endingIndex;
 
     bool noBrackets=false;
 
+    u32 counter = 0;
+
     for (int i=0; i < *length; i++){
-        if (i == *length-1){
-            return 0;
+
+        if ((*tokens)[i].value == '('){
+            if (startIndex == -1){
+                startIndex = i;
+            }
+            counter++;
         }
-        if (tokens[i].value == '('){
-            startIndex = i;
-            break;
+        if ((*tokens)[i].value == ')'){
+            counter--;
+            if (counter == 0){
+                endingIndex = i;
+                break;
+            }
         }
     }
 
-    for (int i = *length - 1; i >= 0; i--){
-        if (tokens[i].value == ')'){
-            endingIndex = i;
-        }
-    }
+    u32 length2 = endingIndex - startIndex - 1;
 
-    *length = endingIndex - startIndex - 1;
-
-    Token *newTokens = malloc(*length);
+    Token *newTokens = malloc(sizeof(Token) * length2);
 
     for (int i = startIndex + 1; i < endingIndex; i++){
-        newTokens[i] = tokens[i];
+        newTokens[i] = (*tokens)[i];
     }
 
-    free(tokens);
+    i32 result = calculate(newTokens, length2);
 
-    return claculate(tokens, length);
+    u32 lengthR = getLengthOfInt(result);
 
+    Token *tokensU = malloc(sizeof(Token) * (*length - length2 - 2 + lengthR));
+
+    for (int i = 0; i < *length - length2 - 2 + lengthR; i++){
+
+        if (i < startIndex || i >= startIndex +lengthR){
+            tokensU[i] = (*tokens)[i];
+        }
+
+        if (result < 0){
+            tokensU[i].value = '-';
+            tokensU[i].type = OPERATOR;
+            result *= -1;
+            continue;
+        }
+        tokensU[i].value = (char)(result / (u32)pow(10, (startIndex + lengthR - i)) % 10 + '0');
+        tokensU[i].type = INT; 
+    }
+
+    free(*tokens);
+
+    *length = *length - length2 - 2 + lengthR;
+
+    *tokens = tokensU;
 
 }
 
+//34 + (45 - 68) - (10-30)
+// (1+2)
 
-i32 claculate(Token tokens[], u32 length){
+
+i32 calculate(Token tokens[], u32 length){
    
     i32 sum = 0;
     u32 actualNumber = 0;
@@ -99,7 +146,8 @@ i32 claculate(Token tokens[], u32 length){
 
     for (int i = 0; i < length; i++){
         if (tokens[i].value == '('){
-            i32 value = removeBrackets(tokens, &length);
+            removeBrackets(&tokens, &length);
+            i = -1;
         }
     }
 
@@ -138,7 +186,7 @@ int main(){
 
         Token *tokens = interpret(line);
 
-        printf("%d\n",claculate(tokens , strlen(line)));
+        printf("%d\n",calculate(tokens , strlen(line)));
 
         free(tokens);
     }
