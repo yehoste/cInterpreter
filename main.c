@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <math.h>
+
 
 typedef uint32_t u32;
 typedef int32_t i32;
@@ -70,6 +69,16 @@ u32 getLengthOfInt(i32 number){
     return length+1;
 }
 
+
+u32 powI(u32 base, u32 exp){
+    u32 result = 1;
+    for(int i = 0; i < exp; i++){
+        result *= base;
+    }
+
+    return result;
+}
+
 void removeBrackets(Token **tokens, u32 *length){
 
     i32 startIndex = -1;
@@ -101,7 +110,7 @@ void removeBrackets(Token **tokens, u32 *length){
     Token *newTokens = malloc(sizeof(Token) * length2);
 
     for (int i = startIndex + 1; i < endingIndex; i++){
-        newTokens[i] = (*tokens)[i];
+        newTokens[i - startIndex - 1] = (*tokens)[i];
     }
 
     i32 result = calculate(newTokens, length2);
@@ -114,6 +123,7 @@ void removeBrackets(Token **tokens, u32 *length){
 
         if (i < startIndex || i >= startIndex +lengthR){
             tokensU[i] = (*tokens)[i];
+            continue;
         }
 
         if (result < 0){
@@ -122,7 +132,7 @@ void removeBrackets(Token **tokens, u32 *length){
             result *= -1;
             continue;
         }
-        tokensU[i].value = (char)(result / (u32)pow(10, (startIndex + lengthR - i)) % 10 + '0');
+        tokensU[i].value = (char)(result / powI(10, (startIndex + lengthR - i)) % 10 + '0');
         tokensU[i].type = INT; 
     }
 
@@ -133,9 +143,6 @@ void removeBrackets(Token **tokens, u32 *length){
     *tokens = tokensU;
 
 }
-
-//34 + (45 - 68) - (10-30)
-// (1+2)
 
 
 i32 calculate(Token tokens[], u32 length){
