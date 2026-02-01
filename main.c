@@ -22,7 +22,7 @@ typedef struct{
     char value;
 }Token;
 
-i32 calculate(Token tokens[], u32 length);
+i32 calculate(Token **tokens, u32 length);
 
 
 Type parseToken(char letter){
@@ -113,7 +113,9 @@ void removeBrackets(Token **tokens, u32 *length){
         newTokens[i - startIndex - 1] = (*tokens)[i];
     }
 
-    i32 result = calculate(newTokens, length2);
+    i32 result = calculate(&newTokens, length2);
+
+    free(newTokens);
 
     u32 lengthR = getLengthOfInt(result);
 
@@ -145,22 +147,22 @@ void removeBrackets(Token **tokens, u32 *length){
 }
 
 
-i32 calculate(Token tokens[], u32 length){
+i32 calculate(Token **tokens, u32 length){
    
     i32 sum = 0;
     u32 actualNumber = 0;
     char previous = '+';
 
     for (int i = 0; i < length; i++){
-        if (tokens[i].value == '('){
-            removeBrackets(&tokens, &length);
+        if ((*tokens)[i].value == '('){
+            removeBrackets(tokens, &length);
             i = -1;
         }
     }
 
     for (int i=0; i< length; i++){
 
-        Token token = tokens[i];
+        Token token = (*tokens)[i];
 
         if (token.value == ' '){
             continue;
@@ -193,7 +195,7 @@ int main(){
 
         Token *tokens = interpret(line);
 
-        printf("%d\n",calculate(tokens , strlen(line)));
+        printf("%d\n",calculate(&tokens , strlen(line)));
 
         free(tokens);
     }
