@@ -3,8 +3,6 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-
 
 typedef uint32_t u32;
 typedef int32_t i32;
@@ -85,8 +83,6 @@ void removeBrackets(Token **tokens, u32 *length){
 
     i32 startIndex = -1;
     u32 endingIndex;
-
-    bool noBrackets=false;
 
     u32 counter = 0;
 
