@@ -33,7 +33,9 @@ Type parseToken(char letter){
 }
 
 Token* interpret(char *line){
-    u32 length = strlen(line);
+
+    u32 length = strlen(line) - 1;
+
     Token *tokens = malloc(sizeof(Token) * length);
 
     for(int i=0; i<length; i++){
@@ -134,7 +136,7 @@ void removeBrackets(Token **tokens, u32 *length){
             result *= -1;
             continue;
         }
-        tokensU[i].value = (char)(result / powI(10, (startIndex + lengthR - i)) % 10 + '0');
+        tokensU[i].value = (char)(result % powI(10, (startIndex + lengthR - i)) + '0');
         tokensU[i].type = INT; 
     }
 
@@ -148,7 +150,7 @@ void removeBrackets(Token **tokens, u32 *length){
 
 
 i32 calculate(Token **tokens, u32 length){
-   
+
     i32 sum = 0;
     u32 actualNumber = 0;
     char previous = '+';
@@ -195,7 +197,7 @@ int main(){
 
         Token *tokens = interpret(line);
 
-        printf("%d\n",calculate(&tokens , strlen(line)));
+        printf("%d\n",calculate(&tokens , strlen(line) - 1));
 
         free(tokens);
     }
