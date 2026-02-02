@@ -193,6 +193,9 @@ int main(){
     char line[BUFFER_SIZE];
 
     while(1){
+
+        printf(">>> ");
+
         fgets(line, BUFFER_SIZE, stdin);
 
         Token *tokens = interpret(line);
