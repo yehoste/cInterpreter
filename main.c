@@ -121,8 +121,13 @@ void removeBrackets(Token **tokens, u32 *length){
 
     for (int i = 0; i < *length - length2 - 2 + lengthR; i++){
 
-        if (i < startIndex || i >= startIndex +lengthR){
+        if (i < startIndex){
             tokensU[i] = (*tokens)[i];
+            continue;
+        }
+
+        if (i >= startIndex +lengthR){
+            tokensU[i] = (*tokens)[i + endingIndex - startIndex];
             continue;
         }
 
