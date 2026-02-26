@@ -79,6 +79,14 @@ u32 powI(u32 base, u32 exp){
     return result;
 }
 
+
+void printTokens(Token *tokens, u32 length){
+    for (u32 i = 0; i < length; i++){
+        printf("%c",tokens[i].value);
+    }
+    printf("\n");
+}
+
 void removeBrackets(Token **tokens, u32 *length){
 
     i32 startIndex = -1;
@@ -117,9 +125,11 @@ void removeBrackets(Token **tokens, u32 *length){
 
     u32 lengthR = getLengthOfInt(result);
 
-    Token *tokensU = malloc(sizeof(Token) * (*length - length2 - 2 + lengthR));
+    u32 updatedLength = *length - length2 - 2 + lengthR;
 
-    for (int i = 0; i < *length - length2 - 2 + lengthR; i++){
+    Token *tokensU = malloc(sizeof(Token) * (updatedLength));
+
+    for (int i = 0; i < updatedLength; i++){
 
         if (i < startIndex){
             tokensU[i] = (*tokens)[i];
@@ -137,13 +147,15 @@ void removeBrackets(Token **tokens, u32 *length){
             result *= -1;
             continue;
         }
-        tokensU[i].value = (char)(result % powI(10, (startIndex + lengthR - i)) + '0');
+        tokensU[i].value = (char)((int)(result / powI(10, (startIndex + lengthR - i - 1))) + '0');
         tokensU[i].type = INT; 
     }
 
+    printTokens(tokensU, updatedLength);
+
     free(*tokens);
 
-    *length = *length - length2 - 2 + lengthR;
+    *length = updatedLength;
 
     *tokens = tokensU;
 
