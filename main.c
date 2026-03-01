@@ -137,7 +137,7 @@ void removeBrackets(Token **tokens, u32 *length){
         }
 
         if (i >= startIndex +lengthR){
-            tokensU[i] = (*tokens)[i + endingIndex - startIndex];
+            tokensU[i] = (*tokens)[i - (startIndex + lengthR) + endingIndex + 1];
             continue;
         }
 
@@ -147,7 +147,7 @@ void removeBrackets(Token **tokens, u32 *length){
             result *= -1;
             continue;
         }
-        tokensU[i].value = (char)((int)(result / powI(10, (startIndex + lengthR - i - 1))) + '0');
+        tokensU[i].value = (char)((int)((result / powI(10, (startIndex + lengthR - i - 1))) % 10) + '0');
         tokensU[i].type = INT; 
     }
 
