@@ -151,7 +151,7 @@ void removeBrackets(Token **tokens, u32 *length){
         tokensU[i].type = INT; 
     }
 
-    printTokens(tokensU, updatedLength);
+    // printTokens(tokensU, updatedLength);     //for debuging
 
     free(*tokens);
 
